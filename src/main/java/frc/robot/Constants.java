@@ -52,15 +52,18 @@ public final class Constants {
     public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
     // SPARK MAX CAN IDs
-    public static final int kFrontLeftDrivingCanId = 11;
-    public static final int kRearLeftDrivingCanId = 13;
-    public static final int kFrontRightDrivingCanId = 15;
-    public static final int kRearRightDrivingCanId = 17;
+    public static final int kFrontLeftDrivingCanId = 10;
+    public static final int kRearLeftDrivingCanId = 19;
+    public static final int kFrontRightDrivingCanId = 9;
+    public static final int kRearRightDrivingCanId = 2;
 
-    public static final int kFrontLeftTurningCanId = 10;
-    public static final int kRearLeftTurningCanId = 12;
-    public static final int kFrontRightTurningCanId = 14;
-    public static final int kRearRightTurningCanId = 16;
+    public static final int kFrontLeftTurningCanId = 11;
+    public static final int kRearLeftTurningCanId = 18;
+    public static final int kFrontRightTurningCanId = 8;
+    public static final int kRearRightTurningCanId = 1;
+
+    
+
 
     public static final boolean kGyroReversed = false;
   }
@@ -112,13 +115,15 @@ public final class Constants {
     public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
-    public static final int kDrivingMotorCurrentLimit = 50; // amps
+    public static final int kDrivingMotorCurrentLimit = 40; // amps
     public static final int kTurningMotorCurrentLimit = 20; // amps
   }
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
     public static final double kDriveDeadband = 0.05;
+
+    public static final int kOperatorControllerPort = 1;
   }
 
   public static final class AutoConstants {
@@ -139,4 +144,45 @@ public final class Constants {
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
+
+  public static final class ElevatorConstants {
+
+    public static final int kElevatorLeftCanId = 4;
+    public static final int kElevatorRightCanId = 5;
+
+
+    public static final double kElevatorP = 0.01;
+    public static final double kElevatorI = 0.000001;
+    public static final double kElevatorD = 0;
+
+    public static final int kElevatorMotorCurrentLimit = 30; // amps
+  }
+
+  public static final class FourBarConstants {
+
+    public static final int kFourBarLeftCanId = 6;
+    public static final int kFourBarRightCanId = 7;
+
+    public static final double kFourBarP = 0.01;
+    public static final double kFourBarI = 0.000001;
+    public static final double kFourBarD = 0;
+
+    public static final int kFourBarMotorCurrentLimit = 30; // amps
+    
+  }
+
+  public static final class ClawConstants {
+
+    public static final int kClawLeftCanId = 12;
+    public static final int kClawRightCanId = 13;
+
+    public static final double kClawP = 0.01;
+    public static final double kClawI = 0.000001;
+    public static final double kClawD = 0;
+
+    public static final int kClawMotorCurrentLimit = 30; // amps
+    
+  }
+
+  
 }

@@ -13,12 +13,15 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
+import frc.robot.Commands.GoToLevel;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -34,9 +37,18 @@ import java.util.List;
 public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
 
   // The driver's controller
-  XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+  PS4Controller m_driverController = new PS4Controller(OIConstants.kDriverControllerPort);
+  PS4Controller m_operatorController = new PS4Controller(OIConstants.kOperatorControllerPort);
+
+  //Button Index
+  int cross = 1;
+  int circle = 2;
+  int square = 3;
+  int triangle = 4;
+
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -44,6 +56,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+    
 
     // Configure default commands
     m_robotDrive.setDefaultCommand(
@@ -72,6 +85,16 @@ public class RobotContainer {
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
+
+    new JoystickButton(m_operatorController, triangle) //Triangle
+    .whileTrue(new GoToLevel(10, 10));
+
+    new JoystickButton(m_operatorController, cross) //X - Cross
+    .whileTrue(new GoToLevel(0, 0));     
+    
+    
+       
+
   }
 
   /**
