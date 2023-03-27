@@ -17,11 +17,14 @@ import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Commands.GoToLevel;
+import frc.robot.Commands.GoToPositionClaw;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.FourBarSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -38,9 +41,11 @@ public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
+  private final FourBarSubsystem m_fourbar = new FourBarSubsystem();
+  private final ClawSubsystem m_claw = new ClawSubsystem();
 
   // The driver's controller
-  PS4Controller m_driverController = new PS4Controller(OIConstants.kDriverControllerPort);
+  XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
   PS4Controller m_operatorController = new PS4Controller(OIConstants.kOperatorControllerPort);
 
   //Button Index
@@ -71,6 +76,8 @@ public class RobotContainer {
             m_robotDrive));
   }
 
+  
+
   /**
    * Use this method to define your button->command mappings. Buttons can be
    * created by
@@ -86,11 +93,26 @@ public class RobotContainer {
             () -> m_robotDrive.setX(),
             m_robotDrive));
 
-    new JoystickButton(m_operatorController, triangle) //Triangle
-    .whileTrue(new GoToLevel(10, 10));
-
     new JoystickButton(m_operatorController, cross) //X - Cross
-    .whileTrue(new GoToLevel(0, 0));     
+    .whileTrue(new GoToLevel(0, 25)); 
+    
+    new JoystickButton(m_operatorController, square) //square
+    .whileTrue(new GoToLevel(-35 , 80));
+
+    new JoystickButton(m_operatorController, triangle) //Triangle
+    .whileTrue(new GoToLevel(-38 , 100));
+
+    new JoystickButton(m_operatorController, circle) //circle
+    .whileTrue(new GoToLevel(-10 , 154));
+    
+
+    new JoystickButton(m_operatorController, Button.kR1.value)
+    .whileTrue(new GoToPositionClaw(1));
+
+    new JoystickButton(m_operatorController, Button.kL1.value)
+    .whileTrue(new GoToPositionClaw(-5));
+
+
     
     
        
@@ -115,9 +137,18 @@ public class RobotContainer {
         // Start at the origin facing the +X direction
         new Pose2d(0, 0, new Rotation2d(0)),
         // Pass through these two interior waypoints, making an 's' curve path
-        List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+        List.of(new Translation2d(1, 0)),
         // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(3, 0, new Rotation2d(0)),
+        new Pose2d(4.5, 0, new Rotation2d(0)),
+        config);
+
+        Trajectory backTrajectory = TrajectoryGenerator.generateTrajectory(
+        // Start at the origin facing the +X direction
+        new Pose2d(0, 0, new Rotation2d(0)),
+        // Pass through these two interior waypoints, making an 's' curve path
+        List.of(new Translation2d(0, 0)),
+        // End 3 meters straight ahead of where we started, facing forward
+        new Pose2d(-.1, 0, new Rotation2d(0)),
         config);
 
     var thetaController = new ProfiledPIDController(
@@ -136,10 +167,24 @@ public class RobotContainer {
         m_robotDrive::setModuleStates,
         m_robotDrive);
 
+        SwerveControllerCommand swerveControllerCommandinitial = new SwerveControllerCommand(
+        backTrajectory,
+        m_robotDrive::getPose, // Functional interface to feed supplier
+        DriveConstants.kDriveKinematics,
+
+        // Position controllers
+        new PIDController(AutoConstants.kPXController, 0, 0),
+        new PIDController(AutoConstants.kPYController, 0, 0),
+        thetaController,
+        m_robotDrive::setModuleStates,
+        m_robotDrive);
+
     // Reset odometry to the starting pose of the trajectory.
     m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
 
     // Run path following command, then stop at the end.
     return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false, false));
+    // return swerveControllerCommandinitial.andThen(swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false, false)));
+
   }
 }

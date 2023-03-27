@@ -19,24 +19,24 @@ public class ClawSubsystem extends SubsystemBase {
 
 
     static SparkMaxPIDController ClawPIDController =  m_ClawLeftLeader.getPIDController();
-    static RelativeEncoder ClawEncoder = m_ClawLeftLeader.getEncoder();
+    public static RelativeEncoder ClawEncoder = m_ClawLeftLeader.getEncoder();
 
 
     
-	static double inchOffset = 19; // this is the offset for the lift, as it doesnt go lower than the top hatch,
+	static double inchOffset = 0; // this is the offset for the lift, as it doesnt go lower than the top hatch,
     // and this makes the robot go to x inches above the ground
 
-    double topLimit = 130; // this will prevent the robot from going too high
+    double topLimit = .21; // this will prevent the robot from going too high
 
     static double encoderOffset = 0;
 
     // inches
     static double outputGearRadius = 0.75;
     static double outputGearCircumference = outputGearRadius * 2 * Math.PI;
-    static double pullyRatio = 2; // one inch on string moves the lift up x inches
+    static double pullyRatio = 1; // one inch on string moves the lift up x inches
 
     // rotations
-    static double gearboxRatio = 9.52; // how many motor rotations are one output rotation
+    static double gearboxRatio = 1; // how many motor rotations are one output rotation
 
     static double motorRotationsToInches = outputGearCircumference * pullyRatio / gearboxRatio;
 
@@ -61,7 +61,9 @@ public ClawSubsystem() {
     ClawPIDController.setD(Constants.ClawConstants.kClawD);
 
     ClawPIDController.setFeedbackDevice(ClawEncoder);
-    m_ClawRightFollower.follow(m_ClawLeftLeader);
+    m_ClawRightFollower.follow(m_ClawLeftLeader, true);
+    m_ClawRightFollower.setInverted(false);
+
 
     m_ClawLeftLeader.burnFlash();
     m_ClawRightFollower.burnFlash();
@@ -99,7 +101,7 @@ public ClawSubsystem() {
             resetTop();
             return;
         }
-        m_ClawLeftLeader.set(.5);
+        m_ClawLeftLeader.set(1);
         System.out.println("Up");
     }
 
@@ -110,7 +112,7 @@ public ClawSubsystem() {
 			resetBottom();
             return;
     }
-    m_ClawLeftLeader.set(.5);
+    m_ClawLeftLeader.set(1);
     System.out.println("Down");
     }
 

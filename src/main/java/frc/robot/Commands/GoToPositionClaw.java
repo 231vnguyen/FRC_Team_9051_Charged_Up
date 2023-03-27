@@ -24,7 +24,7 @@ public class GoToPositionClaw extends CommandBase {
     }
 
     public void execute() {
-        ClawSubsystem.goToInches(19 + (positionClaw - 1) * 28);
+        ClawSubsystem.goToInches(positionClaw-.25);
         
     }
     

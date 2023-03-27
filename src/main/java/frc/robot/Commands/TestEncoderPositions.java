@@ -2,19 +2,24 @@ package frc.robot.Commands;
 
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.FourBarSubsystem;
 
-public class GoToLevel extends CommandBase {
+public class TestEncoderPositions extends CommandBase {
 
     public int levelElevator;
     public int levelFourBar;
 
+    public boolean increaseButton = false;
+
     private static final double MAX_ERROR = 4;
 
-    public GoToLevel(int levelElevator, int levelFourBar) {
-        this.levelElevator = levelElevator;
-        this.levelFourBar = levelFourBar;
+    public TestEncoderPositions(JoystickButton increaseButton, JoystickButton decreaseButton) {
+        
+        increaseButton.whileTrue(null);
+
+
     }
 
     public boolean isFinished() {
@@ -26,7 +31,7 @@ public class GoToLevel extends CommandBase {
 
     public void execute() {
         ElevatorSubsystem.goToInches(19 + (levelElevator - 1) * 28);
-        FourBarSubsystem.goToInches(levelFourBar);
+        FourBarSubsystem.goToInches(19 + (levelFourBar - 1) * 28);
     }
     
 }

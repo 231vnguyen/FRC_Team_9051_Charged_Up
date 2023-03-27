@@ -19,24 +19,24 @@ public class FourBarSubsystem extends SubsystemBase {
 
 
     static SparkMaxPIDController FourBarPIDController =  m_FourBarLeftLeader.getPIDController();
-    static RelativeEncoder FourBarEncoder = m_FourBarLeftLeader.getEncoder();
+    public static RelativeEncoder FourBarEncoder = m_FourBarLeftLeader.getEncoder();
 
 
     
 	static double inchOffset = 19; // this is the offset for the lift, as it doesnt go lower than the top hatch,
     // and this makes the robot go to x inches above the ground
 
-    double topLimit = 130; // this will prevent the robot from going too high
+    double topLimit = 50; // this will prevent the robot from going too high
 
     static double encoderOffset = 0;
 
     // inches
-    static double outputGearRadius = 0.75;
+    static double outputGearRadius = 1.5;
     static double outputGearCircumference = outputGearRadius * 2 * Math.PI;
-    static double pullyRatio = 2; // one inch on string moves the lift up x inches
+    static double pullyRatio = 1; // one inch on string moves the lift up x inches
 
     // rotations
-    static double gearboxRatio = 9.52; // how many motor rotations are one output rotation
+    static double gearboxRatio = 1; // how many motor rotations are one output rotation
 
     static double motorRotationsToInches = outputGearCircumference * pullyRatio / gearboxRatio;
 
@@ -46,7 +46,6 @@ public class FourBarSubsystem extends SubsystemBase {
 
 public FourBarSubsystem() {
 
-    // m_FourBarRightFollower.setInverted(true);
  
 
     m_FourBarLeftLeader.setIdleMode(IdleMode.kBrake);
@@ -61,7 +60,9 @@ public FourBarSubsystem() {
     FourBarPIDController.setD(Constants.FourBarConstants.kFourBarD);
 
     FourBarPIDController.setFeedbackDevice(FourBarEncoder);
-    m_FourBarRightFollower.follow(m_FourBarLeftLeader);
+    m_FourBarRightFollower.follow(m_FourBarLeftLeader, true);
+    m_FourBarRightFollower.setInverted(false);
+
 
     m_FourBarLeftLeader.burnFlash();
     m_FourBarRightFollower.burnFlash();

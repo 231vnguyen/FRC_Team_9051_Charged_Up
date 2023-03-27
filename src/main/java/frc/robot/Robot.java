@@ -4,9 +4,19 @@
 
 package frc.robot;
 
+import com.fasterxml.jackson.databind.deser.impl.ExternalTypeHandler.Builder;
+
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Commands.GoToLevel;
+import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.FourBarSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -18,6 +28,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  private double startTime;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -57,13 +68,13 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
+    // startTime = Timer.getFPGATimestamp();
     /*
      * String autoSelected = SmartDashboard.getString("Auto Selector",
      * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
      * = new MyAutoCommand(); break; case "Default Auto": default:
      * autonomousCommand = new ExampleCommand(); break; }
-     */
+     */  
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -84,6 +95,20 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+  
+    SmartDashboard.putNumber("ElevatorPos", ElevatorSubsystem.elevatorEncoder.getPosition());
+    SmartDashboard.putNumber("FourBarPos", FourBarSubsystem.FourBarEncoder.getPosition());
+    SmartDashboard.putNumber("ClawPos", ClawSubsystem.ClawEncoder.getPosition());
+
+
+    // SmartDashboard.putNumber("ElevatorInches", GoToLevel.this.levelElevator);
+    // SmartDashboard.putNumber("FourBarInches", kDefaultPeriod)
+    // SmartDashboard.putNumber("ClawInches", kDefaultPeriod)
+
+
+
+
   }
 
   /** This function is called periodically during operator control. */
@@ -98,5 +123,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+
+
+    
+  }
 }

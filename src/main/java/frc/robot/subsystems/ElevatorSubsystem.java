@@ -17,22 +17,22 @@ public class ElevatorSubsystem extends SubsystemBase {
     static CANSparkMax m_ElevatorRightFollower = new CANSparkMax(Constants.ElevatorConstants.kElevatorRightCanId, MotorType.kBrushless);
 
     static SparkMaxPIDController elevatorPIDController =  m_ElevatorLeftLeader.getPIDController();
-    static RelativeEncoder elevatorEncoder = m_ElevatorLeftLeader.getEncoder();
+    public static RelativeEncoder elevatorEncoder = m_ElevatorLeftLeader.getEncoder();
 
 	static double inchOffset = 19; // this is the offset for the lift, as it doesnt go lower than the top hatch,
     // and this makes the robot go to x inches above the ground
 
-    double topLimit = 130; // this will prevent the robot from going too high
+    double topLimit = 250.7; // this will prevent the robot from going too high
 
     static double encoderOffset = 0;
 
     // inches
     static double outputGearRadius = 0.75;
     static double outputGearCircumference = outputGearRadius * 2 * Math.PI;
-    static double pullyRatio = 2; // one inch on string moves the lift up x inches
+    static double pullyRatio = 1; // one inch on string moves the lift up x inches
 
     // rotations
-    static double gearboxRatio = 9.52; // how many motor rotations are one output rotation
+    static double gearboxRatio = 1; // how many motor rotations are one output rotation
 
     static double motorRotationsToInches = outputGearCircumference * pullyRatio / gearboxRatio;
 
@@ -55,7 +55,8 @@ public ElevatorSubsystem() {
 
     elevatorPIDController.setFeedbackDevice(elevatorEncoder);
     m_ElevatorRightFollower.follow(m_ElevatorLeftLeader);
-    // m_ElevatorRightFollower.setInverted(true);
+    m_ElevatorRightFollower.follow(m_ElevatorLeftLeader, true);
+    m_ElevatorRightFollower.setInverted(false);
 
 
     m_ElevatorLeftLeader.burnFlash();
@@ -105,7 +106,7 @@ public ElevatorSubsystem() {
 			resetBottom();
             return;
     }
-    m_ElevatorLeftLeader.set(.5);
+    m_ElevatorLeftLeader.set(1);
     System.out.println("Down");
     }
 
